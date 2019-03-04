@@ -165,4 +165,53 @@ class Graph:
             print('Vertex not in graph')
             return None
 
+    '''
+    Part 5: Implement Depth-First Search
+
+    Write a function within your Graph class that takes takes a 
+    starting node and a destination node as an argument, then performs DFS. 
+    Your function should return a valid path (not necessarily the shortest) 
+    from the start node to the destination node.
+    '''
+
+    def dfs(self, start, destination):
+        if start in self.vertices:
+            # create stack
+            s = Stack()
+            # create set to hold visited nodes
+            visited = set()
+            # jumps/path dict
+            jumps = {}
+            # put start in stack
+            s.push(start)
+            # mark start in jumps
+            jumps[start] = (0, [])
+            
+            # loop stack
+            while s.size():
+                # take off back
+                current = s.pop()
+                # check "child" nodes
+                for node in self.vertices[current]:
+                    if node in jumps:
+                        if jumps[node][0] > jumps[current][0] + 1:
+                            jumps[node][0] = jumps[current][0] + 1
+                            new_path = list(jumps[current][1])
+                            new_path.append(current)
+                            jumps[node][1] = new_path
+                    else:
+                        new_path = list(jumps[current][1])
+                        new_path.append(current)
+                        jumps[node] = (jumps[current][0] + 1, new_path)
+
+                    if node == destination:
+                        jumps[node][1].append(node)
+                        return jumps[node][1]
+                    else:
+                        if node not in visited:
+                            visited.add(node)
+                            s.push(node)
+            return None
+        else:
+            return None
 
