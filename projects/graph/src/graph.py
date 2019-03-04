@@ -126,8 +126,8 @@ class Graph:
     def bfs(self, start, destination):
         if start in self.vertices:
             # base case if start = destination
-            if start == destination:
-                return 0
+            # if start == destination:
+            #     return 0
 
             # initialize queue
             q = Queue()
@@ -138,7 +138,7 @@ class Graph:
             # enqueue start
             q.enqueue(start)
             # 0 jumps to reach start
-            jumps[start] = 0
+            jumps[start] = [start]
 
             # while queue not empty
             while q.size():
@@ -148,10 +148,14 @@ class Graph:
                 for node in self.vertices[current]:
                     # see if already in jumps, record distance
                     if node in jumps:
-                        # set to previous node + 1 or what is currently there (short route exists)
-                        jumps[node] = min(jumps[node], jumps[current] + 1)
+                        if len(jumps[node]) > len(jumps[current]) + 1:
+                            new_path = list(jumps[current])
+                            new_path.append(node)
+                            jumps[node] = new_path
                     else:
-                        jumps[node] = jumps[current] + 1
+                        new_path = list(jumps[current])
+                        new_path.append(node)
+                        jumps[node] = new_path
 
                     # check if destination --> return distance
                     if node == destination:
