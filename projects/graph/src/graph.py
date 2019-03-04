@@ -84,3 +84,36 @@ class Graph:
               # Then, put all of it's children into the stack
               for neighbor in self.vertices[v]:
                   s.push(neighbor)
+
+    '''
+    Part 3.5: Implement Depth-First Traversal using Recursion
+
+    Write a function within your Graph class that takes takes a starting node
+    as an argument, then performs DFT using recursion.
+    Your function should print the resulting nodes in the order they were visited.
+    '''
+    def dft_recursive(self, starting_vertex_id):
+        # recursive helper function
+        def recursion(vertex):
+            # mark id in visited set and print node (requirement)
+            visited.add(vertex)
+            print(vertex)
+            # loop through connections from vertex at given id
+            for connected_vertex in self.vertices[vertex]:
+            # if connect already visited, do nothing
+            # if not visited, run recursion on node
+                if connected_vertex not in visited:
+                    recursion(connected_vertex)
+
+        # set to hold visited vertices
+        visited = set()
+        
+        if starting_vertex_id in self.vertices:
+            # put starting in set
+            visited.add(starting_vertex_id)
+            # run recursion() on starting
+            recursion(starting_vertex_id)
+        else:
+            print('Vertex not in graph')
+        
+
