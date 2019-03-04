@@ -115,5 +115,54 @@ class Graph:
             recursion(starting_vertex_id)
         else:
             print('Vertex not in graph')
-        
+
+    '''
+    Part 4: Implement Breadth-First Search
+
+    Write a function within your Graph class that takes takes a starting node 
+    and a destination node as an argument, then performs BFS. 
+    Your function should return the shortest path from the start node to the destination node.
+    '''
+    def bfs(self, start, destination):
+        if start in self.vertices:
+            # base case if start = destination
+            if start == destination:
+                return 0
+
+            # initialize queue
+            q = Queue()
+            # initialize visited set
+            visited = set()
+            # initialize dict to contain jumps taken
+            jumps = {}
+            # enqueue start
+            q.enqueue(start)
+            # 0 jumps to reach start
+            jumps[start] = 0
+
+            # while queue not empty
+            while q.size():
+                # take front of queue
+                current = q.dequeue()
+                # for each "child" of current
+                for node in self.vertices[current]:
+                    # see if already in jumps, record distance
+                    if node in jumps:
+                        # set to previous node + 1 or what is currently there (short route exists)
+                        jumps[node] = min(jumps[node], jumps[current] + 1)
+                    else:
+                        jumps[node] = jumps[current] + 1
+
+                    # check if destination --> return distance
+                    if node == destination:
+                        return jumps[node]
+                    else:
+                        if node not in visited:
+                            visited.add(node)
+                            q.enqueue(node)
+            return None
+        else:
+            print('Vertex not in graph')
+            return None
+
 

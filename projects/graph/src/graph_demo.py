@@ -33,6 +33,8 @@ def main():
     graph.dft('1')
     print('depth first traversal - recursive')
     graph.dft_recursive('1')
+    print('bfs')
+    print(graph.bfs('1', '5'))
 
 if __name__ == '__main__':
     # TODO - parse argv
