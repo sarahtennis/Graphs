@@ -1,4 +1,5 @@
 import random
+from stack import Stack
 
 class User:
     def __init__(self, name):
@@ -93,6 +94,30 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+
+        # initialize stack
+        s = Stack()
+        # start at argument user (put in stack)
+        s.push(userID)
+
+        while s.size():
+            # pop off stack
+            current = s.pop()
+
+            # place self in path
+            if current in visited:
+                visited[current].append(current)
+            else:
+                visited[current] = [current]
+            
+            # look at connections
+            for friend in self.friendships[current]:
+                # for each connection put key as user, value = path
+                if friend not in visited:
+                    visited[friend] = list(visited[current])
+                    # add to stack, repeat
+                    s.push(friend)
+
         return visited
 
 
@@ -100,5 +125,5 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populateGraph(10, 2)
     print(sg.friendships)
-    # connections = sg.getAllSocialPaths(1)
-    # print(connections)
+    connections = sg.getAllSocialPaths(1)
+    print(connections)
