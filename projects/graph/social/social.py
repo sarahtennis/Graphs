@@ -64,6 +64,8 @@ class SocialGraph:
         '''
 
         # best case runtime O(n), worst case O(infinity)
+        # runtime is closer to O(n) as (numUsers * avgFriendships / 2) approachs infinity
+        # smaller probablity of randomly generated duplicates
         friendships = set()
         while len(friendships) < (numUsers * avgFriendships / 2):
             connection = {random.randint(1,numUsers), random.randint(1, numUsers)}
