@@ -18,14 +18,67 @@ roomGraph={0: [(3, 5), {'n': 1}], 1: [(3, 6), {'s': 0, 'n': 2}], 2: [(3, 7), {'s
 world.loadGraph(roomGraph)
 player = Player("Name", world.startingRoom)
 
+opposites = {
+    'n': 's',
+    'e': 'w',
+    's': 'n',
+    'w': 'e'
+}
+
+# shortest path to visit each room
+# list of directions for the player to move in
+traversalPath = []
+
+# map of room and known/unknown connections
+# return path once len(graph) = len(roomGraph) --> same number of rooms
+# graph = {
+#   0: {'n': 4, 's': 8, 'w': 3, 'e': '?'},
+#   4: {'s': 0},
+#   8: {'n': 0, 'w': 16},
+#   16: {'e': 8},
+#   3: {'n': '?', 'w': '?', 'e': 0}
+# }
+graph = {}
+
+# starting room given by loadGraph --> add to graph
+graph[player.currentRoom.id] = {}
+for exit in player.currentRoom.getExits():
+    graph[player.currentRoom.id][exit] = '?'
+
+prevRoom = None
+currentRoom = player.currentRoom
+# loop until len(graph) = len(roomGraph)
+while len(graph) < len(roomGraph):
+    for direction, room in graph[currentRoom.id].items():
+        if room == '?':
+            # move to unknown room
+            player.travel(direction)
+            # put direction in traversal
+            traversalPath.append(direction)
+            # reset markers for current and previous room
+            prevRoom = currentRoom
+            currentRoom = player.currentRoom
+            # update previous room graph
+            graph[prevRoom.id][direction] = currentRoom.id
+            # put current room in graph if not already
+            if currentRoom.id in graph:
+                graph[currentRoom.id][opposites[direction]] = prevRoom.id
+            else:
+                graph[currentRoom.id] = {}
+                for exit in currentRoom.getExits():
+                    graph[currentRoom.id][exit] = '?'
+                graph[currentRoom.id][opposites[direction]] = prevRoom.id
 
 
 
-# FILL THIS IN
-traversalPath = ['n', 's']
+# find unchecked direction from starting room
+# move into room --> update
+# check if room has unknown direction
+# if not, BFS to find closest unknown direction
+# move in that direction, continue
 
-
-
+print(traversalPath)
+print(graph)
 
 
 
