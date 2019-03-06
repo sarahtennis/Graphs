@@ -29,6 +29,14 @@ def main():
     graph.add_directed_edge('2', '3')
     graph.add_directed_edge('4', '6')
     print(graph.vertices)
+    print('depth first traversal')
+    graph.dft('1')
+    print('depth first traversal - recursive')
+    graph.dft_recursive('1')
+    print('bfs')
+    print(graph.bfs('1', '7'))
+    print('dfs')
+    print(graph.dfs('1', '6'))
 
 if __name__ == '__main__':
     # TODO - parse argv

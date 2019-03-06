@@ -1,4 +1,5 @@
-
+import random
+from stack import Stack
 
 class User:
     def __init__(self, name):
@@ -47,8 +48,42 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(numUsers):
+            self.addUser(f"User {i + 1}")
 
         # Create friendships
+
+        ''' ----- LECTURE CODE ----- O(n^2)
+        possibleFriendships = []
+        for userID in self.users:
+            for friendID in range(userID + 1, self.lastID + 1):
+                possibleFriendships.append( (userID, friendID) )
+        random.shuffle(possibleFriendships)
+        print(possibleFriendships[:20])
+        print(len(possibleFriendships))
+        '''
+
+        # best case runtime O(n), worst case O(infinity)
+        # runtime is closer to O(n) as (numUsers * avgFriendships / 2) approachs infinity
+        # smaller probablity of randomly generated duplicates
+        friendships = set()
+        while len(friendships) < (numUsers * avgFriendships / 2):
+            connection = {random.randint(1,numUsers), random.randint(1, numUsers)}
+            if len(connection) > 1 and connection not in friendships:
+                friendships.add(frozenset(connection))
+
+        for connection in friendships:
+            first = 0
+            second = 0
+            counter = 0
+            for id in connection:
+                if counter % 2 == 0:
+                    first = id
+                    counter += 1
+                else:
+                    second = id
+            self.addFriendship(first, second)
+
 
     def getAllSocialPaths(self, userID):
         """
@@ -61,6 +96,30 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+
+        # initialize stack
+        s = Stack()
+        # start at argument user (put in stack)
+        s.push(userID)
+
+        while s.size():
+            # pop off stack
+            current = s.pop()
+
+            # place self in path
+            if current in visited:
+                visited[current].append(current)
+            else:
+                visited[current] = [current]
+            
+            # look at connections
+            for friend in self.friendships[current]:
+                # for each connection put key as user, value = path
+                if friend not in visited:
+                    visited[friend] = list(visited[current])
+                    # add to stack, repeat
+                    s.push(friend)
+
         return visited
 
 
